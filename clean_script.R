@@ -12,42 +12,21 @@ trim.leading <- function (x)  sub("^\\s+", "", x)
 rel_data_1$EVTYPE <- trim.leading(rel_data_1$EVTYPE)
 rel_data_1$EVTYPE <- gsub("tstm", "thunderstorm",rel_data_1$EVTYPE)
 
-x <- cbind(grep("hurricane|typhoon",rel_data_1$EVTYPE),grep("hurricane|typhoon",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "hurricane (typhoon)"
+greppr <- function(a,b){
+        x <- cbind(grep(a,rel_data_1$EVTYPE),grep(a,rel_data_1$EVTYPE, value = TRUE))
+        x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
+        rel_data_1[x2,]$EVTYPE <<- b
+}
 
-x <- cbind(grep("hot|warm",rel_data_1$EVTYPE),grep("hot|warm",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "heat"
-
-
-x <- cbind(grep("^th(.)*m|^t(.)*storm|mi(.)*oburst|downburst|gustnado|whirlwind",rel_data_1$EVTYPE),grep("^th(.)*m|^t(.)*storm|mi(.)*oburst|downburst|gustnado|whirlwind",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "thunderstorm wind"
-
-x <- cbind(grep("fld",rel_data_1$EVTYPE),grep("fld",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "flood"
-
-x <- cbind(grep("^snow(.)*rain|^rain(.)*snow|freezing rain",rel_data_1$EVTYPE),grep("^snow(.)*rain|^rain(.)*snow|freezing rain",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "winter weather"
-
-x <- cbind(grep("record low rainfall",rel_data_1$EVTYPE),grep("record low rainfall",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "drought"
-
-x <- cbind(grep("rain",rel_data_1$EVTYPE),grep("rain",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "heavy rain"
-
-x <- cbind(grep("snow",rel_data_1$EVTYPE),grep("snow",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "heavy snow"
-
-x <- cbind(grep("funnel",rel_data_1$EVTYPE),grep("funnel",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "funnel cloud"
+greppr("hurricane|typhoon", "hurricane (typhoon)")
+greppr("hot|warm", "heat")
+greppr("^th(.)*m|mi(.)*oburst|downburst|gustnado|whirlwind","thunderstorm wind")
+greppr("fld","flood")
+greppr("^snow(.)*rain|^rain(.)*snow|freezing rain|glaze ice", "winter weather")
+greppr("record low rainfall","indeterminate")
+greppr("rain","heavy rain")
+greppr("snow","heavy snow")
+greppr("funnel","funnel cloud")
 
 x1 <- setdiff(grep("cold|wind(.)*chill",rel_data_1$EVTYPE),grep("extreme",rel_data_1$EVTYPE))
 x <- cbind(x1,rel_data_1[x1,]$EVTYPE)
@@ -60,70 +39,33 @@ x <- cbind(x1,rel_data_1[x1,]$EVTYPE)
 x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
 rel_data_1[x2,]$EVTYPE <- "extreme cold/wind chill"
 
-x <- cbind(grep("fire",rel_data_1$EVTYPE),grep("fire",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "wildfire"
+greppr("fire","wildfire")
+greppr("^high(.)*wind*|wnd","high wind")
+greppr("wind","strong wind")
+greppr("high temp","heat")
+greppr("low temp","cold/wind chill")
+greppr("frost|freeze|black ice","frost/freeze")
+greppr("volcanic eruption","volcanic ash")
+greppr("blow-out","astronomical low tide")
+greppr("high tide|coastal surge","coastal flood")
+greppr("wet","heavy rain")
+greppr("smoke","heavy smoke")
+greppr("dust devel|landspout","dust devil")
+greppr("dust","dust storm")
+greppr("cool|dry","nonextreme")
+greppr("avalance","avalanche")
+greppr("storm surge", "storm surge/tide")
+greppr("surf","high surf")
+greppr("ice jam","flash flood")
+greppr("ice floes","marine high wind")
+greppr("ice fog","freezing fog")
+greppr("ice pellets","hail")
+greppr("ice","frost/freeze")
+greppr("lighting","lightning")
+greppr("wall cloud|record","indeterminate")
+greppr("marine mishap","marine high wind")
 
-x <- cbind(grep("^high(.)*wind*|wnd",rel_data_1$EVTYPE),grep("^high(.)*wind*|wnd",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "high wind"
 
-
-x <- cbind(grep("wind",rel_data_1$EVTYPE),grep("wind",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "strong wind"
-
-x <- cbind(grep("high temp",rel_data_1$EVTYPE),grep("high temp",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "heat"
-
-x <- cbind(grep("low temp",rel_data_1$EVTYPE),grep("low temp",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "cold/wind chill"
-
-x <- cbind(grep("frost|freeze",rel_data_1$EVTYPE),grep("frost|freeze",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "frost/freeze"
-
-x <- cbind(grep("volcanic eruption",rel_data_1$EVTYPE),grep("volcanic eruption",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "volcanic ash"
-
-x <- cbind(grep("blow-out",rel_data_1$EVTYPE),grep("blow-out",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "astronomical low tide"
-
-x <- cbind(grep("high tide|coastal surge",rel_data_1$EVTYPE),grep("high tide|coastal surge",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "coastal flood"
-
-x <- cbind(grep("wet",rel_data_1$EVTYPE),grep("wet",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "heavy rain"
-
-x <- cbind(grep("smoke",rel_data_1$EVTYPE),grep("smoke",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "heavy smoke"
-
-x <- cbind(grep("dust devel|landspout",rel_data_1$EVTYPE),grep("dust devel|landspout",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "dust devil"
-
-x <- cbind(grep("duststorm",rel_data_1$EVTYPE),grep("saharan dust",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "dust storm"
-
-x <- cbind(grep("cool",rel_data_1$EVTYPE),grep("cool",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "nonextreme"
-
-x <- cbind(grep("avalance",rel_data_1$EVTYPE),grep("avalance",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "avalanche"
-
-x <- cbind(grep("storm surge",rel_data_1$EVTYPE),grep("storm surge",rel_data_1$EVTYPE, value = TRUE))
-x2 <- as.numeric(subset(x, !(x[,2] %in% ev_table))[,1])
-rel_data_1[x2,]$EVTYPE <- "storm surge/tide"
 
 g <- setdiff(rel_data_1$EVTYPE, ev_table) ##removes exact matches
 h <- sapply(ev_table, grep, x = g) ##indexes partial matches
@@ -132,4 +74,4 @@ i <- unique(i)
 j <- g[i]
 k <- setdiff(g,j) ##removes partial matches
 k <- k[-grep("summary",k)]
-k <- k[-grep("dry",k)]
+
