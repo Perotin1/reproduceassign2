@@ -15,14 +15,28 @@ g <- rel_data[!(rel_data$EVTYPE %in% ev_table),] ##removes exact matches
 g1 <- setdiff(rel_data$EVTYPE, ev_table) ##gets typo evtypes
 h1 <- sapply(ev_table, grep, x = g1) ##gets indexes of partial matches to typo evtypes
 h1 <- h1[lapply(h1,length)>0] ## removes empties
-h1_intersect <- function(l){
-        nms <- combn( names(l) , 2 , FUN = paste0 , collapse = "" , simplify = FALSE )
-        ll <- combn( l , 2 , simplify = FALSE )
-        out <- lapply( ll , function(x) intersect( x[[1]] , x[[2]] )  )
-        setNames( out , nms )
-        out
+for(i in length(h1)) h1[i] <- as.integer(h1[i])
+## h1_intersect <- function(l){
+##        nms <- combn( names(l) , 2 , FUN = paste0 , collapse = "_" , simplify = FALSE )
+##        ll <- combn( l , 2 , simplify = FALSE )
+##        out <- lapply( ll , function(x) intersect( x[[1]] , x[[2]] )  )
+##        setNames( out , nms )
+##}
+##h2 <- h1_intersect(h1)
+##h2 <- h2[lapply(h2,length)>0]
+h3 <- unique(unlist(h1))
+N <- 367
+h4 <- vector("list", N)
+for(i in 1:N) { ## trying to get function to return index of lists of which h3[i] is an element
+        a <- logical()
+        for(j in 1:30){
+        a[[j]] <- h3[i] %in% h1[j]
+        }
+       b <- names(h1)[a]
+       h4[[i]] <- b
 }
-h2 <- h1_intersect(h1)
+names(h4) <- h3
+
 
 rel_data_1$EVTYPE <- gsub("tstm", "thunderstorm",rel_data_1$EVTYPE)
 
