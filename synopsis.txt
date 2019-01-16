@@ -2,3 +2,9 @@ Decision was taken to categorise values whether or not damage thresholds were no
 This will not distort considerations of total damage done, and while
 it does impact summary statistics for extreme weather events, but considering that
 events will continue to occur without causing damage, this data was considered relevant.
+
+Plan:
+create dataset without already correct values then operate on
+then merge back into original dataset
+
+want to get most combinations of evtypes

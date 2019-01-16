@@ -15,28 +15,59 @@ g <- rel_data[!(rel_data$EVTYPE %in% ev_table),] ##removes exact matches
 g1 <- setdiff(rel_data$EVTYPE, ev_table) ##gets typo evtypes
 h1 <- sapply(ev_table, grep, x = g1) ##gets indexes of partial matches to typo evtypes
 h1 <- h1[lapply(h1,length)>0] ## removes empties
-for(i in length(h1)) h1[i] <- as.integer(h1[i])
-## h1_intersect <- function(l){
-##        nms <- combn( names(l) , 2 , FUN = paste0 , collapse = "_" , simplify = FALSE )
-##        ll <- combn( l , 2 , simplify = FALSE )
-##        out <- lapply( ll , function(x) intersect( x[[1]] , x[[2]] )  )
-##        setNames( out , nms )
-##}
-##h2 <- h1_intersect(h1)
-##h2 <- h2[lapply(h2,length)>0]
+h1 <- lapply(h1,as.integer)
 h3 <- unique(unlist(h1))
 N <- 367
 h4 <- vector("list", N)
 for(i in 1:N) { ## trying to get function to return index of lists of which h3[i] is an element
         a <- logical()
         for(j in 1:30){
-        a[[j]] <- h3[i] %in% h1[j]
+        a[[j]] <- h3[i] %in% h1[j][[1]]
         }
        b <- names(h1)[a]
        h4[[i]] <- b
 }
-names(h4) <- h3
+names(h4) <- g1[as.numeric(h3)]
+h5 <- h4[lapply(h4,length)<2]
+for(i in 1:269){
+        r <- rel_data$EVTYPE==names(h5)[i]
+        rel_data$EVTYPE[r] <- h5[i][[1]]
+}
+h6 <- h4[lapply(h4,length)>1]
+h7 <- h6[grep("flash",names(h6))]
+for(i in 1:19){
+        r <- rel_data$EVTYPE==names(h7)[i]
+        rel_data$EVTYPE[r] <- "flash flood"
+}
+h8 <- h6[-(grep("flash",names(h6)))]
 
+h9 <- h8[grep("blizzard",names(h6))]
+for(i in 1:10){
+        r <- rel_data$EVTYPE==names(h9)[i]
+        rel_data$EVTYPE[r] <- "blizzard"
+}
+h10 <- h8[-(grep("blizzard",names(h8)))]
+
+h11 <- h10[grep("coast",names(h10))]
+for(i in 1:5){
+        r <- rel_data$EVTYPE==names(h11)[i]
+        rel_data$EVTYPE[r] <- "coastal flood"
+}
+h12 <- h10[-(grep("coast",names(h10)))]
+
+h13 <- h12[grep("flood",names(h12))]
+for(i in 1:15){
+        r <- rel_data$EVTYPE==names(h13)[i]
+        rel_data$EVTYPE[r] <- "flood"
+}
+h14 <- h12[-(grep("flood",names(h12)))]
+
+h15 <- h14[grep("snow|winter storm",names(h14))]
+for(i in 1:14){
+        r <- rel_data$EVTYPE==names(h15)[i]
+        rel_data$EVTYPE[r] <- "winter storm"
+}
+h16 <- h14[-(grep("snow|winter storm",names(h14)))]
 
 rel_data_1$EVTYPE <- gsub("tstm", "thunderstorm",rel_data_1$EVTYPE)
 
