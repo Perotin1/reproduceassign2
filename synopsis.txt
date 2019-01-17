@@ -3,8 +3,17 @@ This will not distort considerations of total damage done, and while
 it does impact summary statistics for extreme weather events, but considering that
 events will continue to occur without causing damage, this data was considered relevant.
 
-Plan:
-create dataset without already correct values then operate on
-then merge back into original dataset
+Per mentor Usama Khalil, prior to Jan 1996, not all event types were recorded.
+We exclude these years as this would otherwise radically distort harm metrics in favour of the longer 
+historied event types
 
-want to get most combinations of evtypes
+
+
+
+
+
+
+To optimise cleaning:
+Functionalise Partial Matching to EVTYPES
+Remove elements with acceptable EVTYPES initially and after each loop to accelerate looping.
+
