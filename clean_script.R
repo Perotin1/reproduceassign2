@@ -1,5 +1,6 @@
-library(lubridate)
-library(dplyr)
+require(lubridate)
+require(dplyr)
+require(ggplot2)
 if(!file.exists("FStormData.csv.bz2")){
         download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2",
                       "FStormData.csv.bz2")
@@ -168,7 +169,9 @@ for(i in 1:18){
 }
 rel_data_1[x2,] <- x3
 
+g <- setdiff(rel_data_1$EVTYPE, ev_table) ##removes exact matches
+
 bad_evtype <- rbind(bad_evtype,rel_data_1[rel_data_1$EVTYPE %in% g,])
 rel_data_1 <- rel_data_1[!(rel_data_1$EVTYPE %in% g),]
 
-g <- setdiff(rel_data_1$EVTYPE, ev_table) ##removes exact matches
+g <- unique(rel_data_1$EVTYPE)
